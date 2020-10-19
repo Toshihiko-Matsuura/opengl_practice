@@ -1,7 +1,22 @@
 #include <GLUT/glut.h>
 #include <stdlib.h>
+#include <string>
+#include <stdio.h>
 
-int wide = 10;
+int speed_num = 0;
+std::string speed_str;
+
+GLuint base;
+
+void drawBitmapString(void *font, std::string speed_str){
+  glPushAttrib(GL_CURRENT_BIT);
+  glScalef(1.2f, 1.2f, 0.0f);
+  for(int i = 0; i < (int)speed_str.size(); i++){
+    glutBitmapCharacter(font, speed_str[i]);
+  }
+  glScalef(-1.2f, -1.2f, 0.0);
+  glPopAttrib(); 
+}
 
 void base_design(){
   glLineWidth(2.0);
@@ -40,22 +55,26 @@ void display(void)
   glColor3d(1.0, 0.0, 0.0);
   glBegin(GL_POLYGON);
   glVertex2i(200, 400);
-  glVertex2i(200 + (650 - 200) * wide / 100, 400);
-  glVertex2i(200 + (650 - 200) * wide / 100, 400 - (400 - 100) * wide / 100 );
+  glVertex2i(200 + (650 - 200) * speed_num / 100, 400);
+  glVertex2i(200 + (650 - 200) * speed_num / 100, 400 - (400 - 100) * speed_num / 100 );
   glEnd();
 
   base_design();
 
+  glRasterPos2i(670, 400);
+  speed_str = std::to_string(speed_num);
+  drawBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, speed_str.c_str());
+  
   glFlush();
 
 }
 
 void timer(int value) {
-  wide += 1;
+  speed_num += 1;
   glutPostRedisplay(); //画面を再描写
   glutTimerFunc(100, timer, 0);
-  if(wide > 100){
-    wide = 0;
+  if(speed_num > 100){
+    speed_num = 0;
   }
 }
 
