@@ -3,22 +3,32 @@
 #include <string>
 #include <stdio.h>
 
-int speed_num = 0;
 std::string speed_str;
 
 GLuint base;
 
-void drawBitmapString(void *font, std::string speed_str){
+class Display{
+private:
+  static int speed_num;
+  static void draw_string(void *font, std::string speed_str);
+  static void base_design();
+  static void display(void);
+  static void timer(int value);
+  static void keyboard(unsigned char key, int x, int y);
+	  			  
+public:
+  void main(int argc, char *argv[]);
+};
+
+void Display::draw_string(void *font, std::string speed_str){
   glPushAttrib(GL_CURRENT_BIT);
-  glScalef(1.2f, 1.2f, 0.0f);
   for(int i = 0; i < (int)speed_str.size(); i++){
     glutBitmapCharacter(font, speed_str[i]);
   }
-  glScalef(-1.2f, -1.2f, 0.0);
   glPopAttrib(); 
 }
 
-void base_design(){
+void Display::base_design(){
   glLineWidth(2.0);
   glColor3d(1.0, 1.0, 1.0);
   glBegin(GL_LINE_LOOP);
@@ -48,7 +58,7 @@ void base_design(){
   glEnd();
 }
 
-void display(void)
+void Display::display(void)
 {
   glClear(GL_COLOR_BUFFER_BIT);
 
@@ -59,17 +69,18 @@ void display(void)
   glVertex2i(200 + (650 - 200) * speed_num / 100, 400 - (400 - 100) * speed_num / 100 );
   glEnd();
 
-  base_design();
+  Display::base_design();
 
   glRasterPos2i(670, 400);
   speed_str = std::to_string(speed_num);
-  drawBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, speed_str.c_str());
+  
+  draw_string(GLUT_BITMAP_TIMES_ROMAN_24, speed_str.c_str());
   
   glFlush();
 
 }
 
-void timer(int value) {
+void Display::timer(int value) {
   speed_num += 1;
   glutPostRedisplay(); //画面を再描写
   glutTimerFunc(100, timer, 0);
@@ -78,7 +89,7 @@ void timer(int value) {
   }
 }
 
-void keyboard(unsigned char key, int x, int y){
+void Display::keyboard(unsigned char key, int x, int y){
   switch (key) {
   case 'q':
   case 'Q':
@@ -89,17 +100,24 @@ void keyboard(unsigned char key, int x, int y){
   }
 }
 
-int main(int argc, char *argv[])
-{
+void Display::main(int argc, char *argv[]){
   glutInit(&argc, argv);
   glutInitWindowSize(800, 450);
   glutCreateWindow("B-tech Meter");
   glutInitDisplayMode(GLUT_RGBA);
-  glutDisplayFunc(display);
+  glutDisplayFunc(&this->display);
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f); //背景色を設定
   gluOrtho2D(0, 800, 450, 0); // 座標系の設定
-  glutKeyboardFunc(keyboard);
-  glutTimerFunc(100, timer, 0); //timer()を実行
+  glutKeyboardFunc(this->keyboard);
+  glutTimerFunc(100, this->timer, 0); //timer()を実行
   glutMainLoop();
+}
+
+int Display::speed_num = 0;
+
+int main(int argc, char *argv[])
+{
+  Display display;
+  display.main(argc, argv);
   return 0;
 }
