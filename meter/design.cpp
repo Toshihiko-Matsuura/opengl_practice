@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string>
 #include <stdio.h>
+#include "seven_segment.hpp"
 
 std::string speed_str;
 
@@ -15,7 +16,7 @@ private:
   static void display(void);
   static void timer(int value);
   static void keyboard(unsigned char key, int x, int y);
-	  			  
+  
 public:
   void main(int argc, char *argv[]);
 };
@@ -37,11 +38,11 @@ void Display::base_design(){
   glVertex2i(650, 100);
   glEnd();
 
-  glBegin(GL_LINE_LOOP);
-  glVertex2i(150, 50);
-  glVertex2i(600, 50);
-  glVertex2i(150, 350);
-  glEnd();
+  //glBegin(GL_LINE_LOOP);
+  //glVertex2i(150, 50);
+  //glVertex2i(600, 50);
+  //glVertex2i(150, 350);
+  //glEnd();
 
   glBegin(GL_LINE_LOOP);
   glVertex2i(670, 400);
@@ -50,12 +51,14 @@ void Display::base_design(){
   glVertex2i(670, 290);
   glEnd();
 
-  glBegin(GL_LINE_LOOP);
-  glVertex2i(20, 50);
-  glVertex2i(130, 50);
-  glVertex2i(130, 160);
-  glVertex2i(20, 160);
-  glEnd();
+  //glBegin(GL_LINE_LOOP);
+  //glVertex2i(20, 50);
+  //glVertex2i(130, 50);
+  //glVertex2i(130, 160);
+  //glVertex2i(20, 160);
+  //glEnd();
+  bool fill_list[7] = {true, true, true, false, true, false, true};
+  SevenSegment::seven_segment_unit(10, 10, fill_list);
 }
 
 void Display::display(void)
