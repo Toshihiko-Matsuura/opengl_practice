@@ -11,7 +11,7 @@ GLuint base;
 class Display{
 private:
   static int speed_num;
-  static void draw_string(void *font, std::string speed_str);
+  static void draw_string(void *font, std::string speed_str, int pos_x, int pos_y);
   static void base_design();
   static void display(void);
   static void timer(int value);
@@ -21,7 +21,9 @@ public:
   void main(int argc, char *argv[]);
 };
 
-void Display::draw_string(void *font, std::string speed_str){
+void Display::draw_string(void *font, std::string speed_str, int pos_x, int pos_y){
+  glColor3d(1.0, 1.0, 1.0);
+  glRasterPos2i(pos_x, pos_y);
   glPushAttrib(GL_CURRENT_BIT);
   for(int i = 0; i < (int)speed_str.size(); i++){
     glutBitmapCharacter(font, speed_str[i]);
@@ -56,9 +58,8 @@ void Display::base_design(){
   //glVertex2i(130, 50);
   //glVertex2i(130, 160);
   //glVertex2i(20, 160);
-  //glEnd();
-  bool fill_list[7] = {true, true, true, false, true, false, true};
-  SevenSegment::seven_segment_unit(10, 10, fill_list);
+  //glEnd();  
+  
 }
 
 void Display::display(void)
@@ -74,10 +75,13 @@ void Display::display(void)
 
   Display::base_design();
 
-  glRasterPos2i(670, 400);
+  bool fill_list1[7] = {true, true, true, false, true, false, true};
+  bool fill_list2[7] = {false, false, false, false, false, false, false};
+  SevenSegment::seven_segment_unit(10, 10, fill_list1);
+  SevenSegment::seven_segment_unit(70, 10, fill_list2);
+
   speed_str = std::to_string(speed_num);
-  
-  draw_string(GLUT_BITMAP_TIMES_ROMAN_24, speed_str.c_str());
+  draw_string(GLUT_BITMAP_TIMES_ROMAN_24, speed_str.c_str(), 670, 400);
   
   glFlush();
 
